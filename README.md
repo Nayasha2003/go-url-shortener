@@ -1,7 +1,7 @@
 # Go URL Shortener 🚀
 
 A **production-grade URL shortening service** built with **Golang**, **PostgreSQL**, **Redis**, and **Docker**.  
-Designed using **real-world backend architecture**, this project showcases **high-performance caching**, **reliable data persistence**, and **containerized deployment** — exactly the skills recruiters seek in backend and software engineers.
+Designed using **real-world backend architecture**, this project showcases **high performance caching**, **reliable data persistence**, and **containerized deployment** exactly the skills recruiters seek in backend and software engineers.
 
 ---
 
