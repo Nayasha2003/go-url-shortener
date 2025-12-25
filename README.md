@@ -140,3 +140,16 @@ Azure
 Render
 
 Railway
+
+
+## 👩‍💻 Author
+
+**Nayasha**  
+Computer Science Graduate | Backend & Full-Stack Developer  
+💻 Golang • DSA • System Design • Databases • Docker  
+
+> _This project reflects my ability to design and build backend systems that scale, perform, and follow real-world engineering standards._
+
+---
+
+⭐ If you find this project interesting, consider starring the repository!
