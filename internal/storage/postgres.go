@@ -15,7 +15,7 @@ var DB *sql.DB
 func InitPostgres() {
 	dsn := os.Getenv("POSTGRES_DSN")
 	if dsn == "" {
-		dsn = "postgres://postgres:Omanand%402000@localhost:5432/urlshortener?sslmode=disable"
+		dsn = "postgres://postgres:Password@localhost:5432/urlshortener?sslmode=disable"
 	}
 
 	db, err := sql.Open("postgres", dsn)
