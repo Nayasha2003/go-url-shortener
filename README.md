@@ -1,103 +1,232 @@
-# 🚀 Go URL Shortener
-⚡ High Performance • 🧠 Clean Architecture • 📈 Production-Grade Observability
+# ⚡ Go URL Shortener
 
-Go URL Shortener is a production-ready backend service designed to generate, store, and resolve shortened URLs with low latency, high throughput, and strong consistency.
+A production-ready, high-performance URL shortener built with **Go**, **PostgreSQL**, **Redis**, and **Docker** — featuring Prometheus metrics, Kubernetes deployment support, and a CI/CD pipeline via GitHub Actions.
 
-The system leverages Redis ⚡ for high-speed caching, PostgreSQL 🗄️ for reliable persistence, Prometheus 📊 for metrics, and is deployed on Kubernetes ☸️ with a fully automated GitHub Actions CI/CD pipeline.
+---
 
-## 🧠 Key Highlights
-- ⚡ **High Performance:** Built with Go for efficient concurrency and fast request handling
-- ☸️ **Kubernetes Deployment:** Multi-replica deployment with liveness/readiness probes and resource limits
-- 📊 **Observability:** Prometheus metrics (request latency, cache hit rate, throughput) with Grafana dashboards
-- 🔁 **Cache-First Strategy:** Redis caching reduces DB load and improves URL resolution speed by 60%
-- 🚀 **CI/CD Pipeline:** GitHub Actions automates build, test, and Docker image push to Docker Hub on every commit
-- 🐳 **Fully Containerized:** Docker + Docker Compose for consistent local and production environments
-- 🗄️ **Reliable Storage:** PostgreSQL ensures data durability and consistency
+## 🚀 Features
 
-## 🏗️ System Architecture
+- 🔗 **Shorten any URL** — generates a unique 6-character short code instantly
+- ⚡ **Redis caching** — lightning-fast redirects with 24-hour cache TTL
+- 🗄️ **PostgreSQL persistence** — durable storage for all URL mappings
+- 📊 **Prometheus metrics** — built-in observability at `/metrics`
+- 🐳 **Docker Compose** — one command to run everything locally
+- ☸️ **Kubernetes ready** — includes deployment manifests with liveness & readiness probes
+- 🔁 **CI/CD pipeline** — automated build and push via GitHub Actions
 
-Client
-│
-▼
-REST API (Go) ──► /metrics (Prometheus)
-│
-├── Redis (Cache Layer)
-│
-└── PostgreSQL (Persistent Storage)
-Kubernetes Cluster
-├── Deployment (2 replicas, probes, resource limits)
-└── Services (LoadBalancer + ClusterIP)
-CI/CD: GitHub Actions → Docker Build → Docker Hub
+---
 
-## ⚙️ Tech Stack
+## 🛠️ Tech Stack
+
 | Layer | Technology |
-|-------|-----------|
-| Language | Go (Golang) |
-| Containerization | Docker, Kubernetes |
+|---|---|
+| Language | Go 1.25 |
+| Database | PostgreSQL 15 |
+| Cache | Redis 7 |
+| Containerization | Docker + Docker Compose |
+| Orchestration | Kubernetes |
+| Metrics | Prometheus |
 | CI/CD | GitHub Actions |
-| Observability | Prometheus, Grafana |
-| Cache | Redis |
-| Database | PostgreSQL |
-| Version Control | Git & GitHub |
 
-## 🛠️ Requirements
-- Go >= 1.21
-- Docker & Docker Compose
-- kubectl (for Kubernetes deployment)
+---
 
-## 💻 Getting Started
+## 📁 Project Structure
 
-### 1️⃣ Clone the repo
+```
+go-url-shortener/
+├── cmd/
+│   └── server/
+│       └── main.go          # Entry point, HTTP handlers, Prometheus metrics
+├── internal/
+│   └── storage/
+│       ├── postgres.go      # PostgreSQL connection and table setup
+│       ├── redis.go         # Redis connection
+│       └── url.go           # Insert and fetch URL mappings
+├── k8s/
+│   ├── deployment.yaml      # Kubernetes Deployment + ConfigMap + Secret
+│   └── service.yaml         # Kubernetes Service
+├── .github/
+│   └── workflows/
+│       └── ci.yml           # GitHub Actions CI/CD pipeline
+├── docker-compose.yml       # Local development setup
+├── Dockerfile               # Multi-stage build
+├── go.mod
+└── go.sum
+```
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/) installed
+- [Docker Compose](https://docs.docker.com/compose/) installed
+
+### Run Locally
+
 ```bash
-git clone https://github.com/Om20An00/go-url-shortener.git
+# Clone the repo
+git clone https://github.com/Nayasha2003/go-url-shortener.git
 cd go-url-shortener
+
+# Start all services (app + PostgreSQL + Redis)
+docker compose up --build
 ```
 
-### 2️⃣ Run with Docker Compose
-```bash
-docker-compose up --build
-```
-The API will start on http://localhost:8080 🚀
+The server will be available at **`http://localhost:8080`**
 
-### 3️⃣ Deploy on Kubernetes
-```bash
-kubectl apply -f k8s/deployment.yaml
-kubectl apply -f k8s/service.yaml
+---
+
+## 📡 API Endpoints
+
+### `GET /`
+Returns API usage info.
+
+```json
+{
+  "status": "ok",
+  "shorten": "POST /shorten with {\"url\": \"https://example.com\"}",
+  "redirect": "GET /r/<short_code>"
+}
 ```
 
-### 4️⃣ View Metrics
-```bash
-curl http://localhost:8080/metrics
-```
+---
 
-### 5️⃣ Test API Endpoints
+### `POST /shorten`
+Shortens a URL and returns a short code.
+
+**Request:**
 ```bash
-# Shorten a URL
 curl -X POST http://localhost:8080/shorten \
   -H "Content-Type: application/json" \
-  -d '{"url":"https://example.com"}'
-
-# Redirect
-curl http://localhost:8080/r/<short-code>
+  -d '{"url": "https://github.com/Nayasha2003"}'
 ```
 
-## 🔑 Core Features
-- 🔗 Generate short URLs from long URLs
-- 🚀 Fast redirection with Redis cache-first strategy
-- 📊 Prometheus metrics endpoint at `/metrics`
-- ☸️ Kubernetes manifests for scalable, resilient deployment
-- 🔄 Automated CI/CD via GitHub Actions
-- 🗃️ PostgreSQL persistent storage with cache fallback
+**Response:**
+```json
+{
+  "short_url": "aB3xYz"
+}
+```
 
-## 🛠️ Future Enhancements
-- 🔐 Authentication & user-based URL management
-- 📈 Analytics (click counts, geo stats)
-- ⏳ URL expiration & cleanup jobs
-- 🚦 Rate limiting & abuse prevention
+---
 
-## 👨‍💻 Author
-**Om Anand Dubey**
-- 🌐 GitHub: [Om20An00](https://github.com/Om20An00)
-- 💼 LinkedIn: [om-anand-dubey](https://linkedin.com/in/om-anand-dubey-283366229)
+### `GET /r/<short_code>`
+Redirects to the original URL.
 
-⭐ If you're a recruiter or engineer reviewing this — this repository reflects production-grade DevOps and backend practices including observability, container orchestration, and automated delivery pipelines.
+```bash
+curl -L http://localhost:8080/r/aB3xYz
+```
+
+Responds with `HTTP 302` and redirects to the original URL.
+
+---
+
+### `GET /health`
+Health check endpoint used by Kubernetes probes.
+
+```
+200 OK
+```
+
+---
+
+### `GET /metrics`
+Exposes Prometheus metrics.
+
+| Metric | Description |
+|---|---|
+| `http_requests_total` | Total HTTP requests by method, endpoint, status |
+| `redirect_latency_seconds` | Redirect latency (cache hit vs miss) |
+| `cache_hits_total` | Total Redis cache hits |
+| `cache_misses_total` | Total Redis cache misses |
+
+---
+
+## 🐳 Docker Compose Services
+
+| Service | Port | Description |
+|---|---|---|
+| `app` | `8080` | Go HTTP server |
+| `postgres` | `5432` | PostgreSQL database |
+| `redis` | `6379` | Redis cache |
+
+**Stop all services:**
+```bash
+docker compose down
+```
+
+**Stop and remove all data volumes:**
+```bash
+docker compose down -v
+```
+
+---
+
+## ☸️ Kubernetes Deployment
+
+```bash
+# Apply all manifests
+kubectl apply -f k8s/
+
+# Check pods
+kubectl get pods
+
+# Check service
+kubectl get svc
+```
+
+The deployment runs **2 replicas** with resource limits and liveness/readiness probes configured on `/health`.
+
+---
+
+## 🔁 CI/CD Pipeline
+
+The GitHub Actions workflow (`.github/workflows/ci.yml`) automatically:
+
+1. Builds the Docker image on every push
+2. Logs into Docker Hub using repository secrets
+3. Pushes the image to Docker Hub
+
+### Required GitHub Secrets
+
+Go to **Settings → Secrets and variables → Actions** and add:
+
+| Secret | Value |
+|---|---|
+| `DOCKER_USERNAME` | Your Docker Hub username |
+| `DOCKER_PASSWORD` | Your Docker Hub Personal Access Token |
+
+---
+
+## 🔧 Environment Variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `POSTGRES_DSN` | `postgres://postgres:password@localhost:5432/urlshortener?sslmode=disable` | PostgreSQL connection string |
+| `REDIS_ADDR` | `localhost:6379` | Redis address |
+
+---
+
+## 🏗️ How It Works
+
+```
+Client → POST /shorten → Generate short code → Save to PostgreSQL + Redis → Return short code
+
+Client → GET /r/<code> → Check Redis cache
+                              ├── Cache HIT  → Redirect instantly
+                              └── Cache MISS → Query PostgreSQL → Cache result → Redirect
+```
+
+---
+
+## 👩‍💻 Author
+
+**Nayasha** — [@Nayasha2003](https://github.com/Nayasha2003)
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
